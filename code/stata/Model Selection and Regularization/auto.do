@@ -27,7 +27,7 @@ mat drop _all
 
 set seed 1
 
-import delim using Auto.csv, delim(",") clear
+import delim using auto.csv, delim(",") clear
 save auto.dta, replace
 
 ***************************

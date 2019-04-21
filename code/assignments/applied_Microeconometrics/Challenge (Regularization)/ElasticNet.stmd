@@ -29,7 +29,7 @@ If $y = 1$, the individual expected the future's income would increase; if $y = 
 ```
 Then we should use $\alpha = 1$ and $\lambda = 0.16124761$. It is easy to see from the graph
 ```s
-	qui cvlasso y $x, alpha(1) l(`e(lmin)') plotcv
+	qui cvlasso y $x, alpha(1) plotcv
 	graph export CVLOPT.png, replace
 ![](CVLOPT.png)
 ```

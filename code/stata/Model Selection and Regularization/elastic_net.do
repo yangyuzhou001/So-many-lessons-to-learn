@@ -2,6 +2,7 @@ clear
 browse
 
 set obs 100
+set seed 123 //It is different from the R code's seed
 gen z1 = rnormal()
 gen z2 = rnormal()
 

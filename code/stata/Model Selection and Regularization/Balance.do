@@ -106,8 +106,16 @@ vselect balance $x, forward bic
 * Ridge Regression * 
 
 ********************
-lasso2 balance $x, alpha(0) l(0.01)
-lasso2 balance $x, alpha(0) l(10000)
+
+//  Note: the above lambda differs from the definition used in parts of 
+//	the lasso and elastic net literature; see for example the R package 
+//	glmnet by Friedman et al. (2010).  We have here adopted an objective
+//  function following Belloni et al. (2012).  Specifically, 
+//	lambda=2*N*lambda(GN) where lambda(GN) is the penalty level used by 
+//	glmnet.
+
+lasso2 balance $x, alpha(0) l(8) // 2*N*0.01
+lasso2 balance $x, alpha(0) l(8000000) //2*N*10000
 lasso2 balance $x, alpha(0) long lic(aic)
 
 * Coefficient Plot

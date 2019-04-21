@@ -1,0 +1,40 @@
+Which factors will affect Chinese Individual's Expected Income? \footnote{Author: Yangyuzhou, ID 15320170155234, mail: yangyuzhou001@foxmail.com}
+---------
+
+We use CGSS data in 2006 to evaluate the effects that some factors affect Chinese Individual's expected income.
+First, we should deal with the original data from CGSS2006. The data contains basic demographic information and another variables about income directly. The numer of the variables is 71. Therefore, we get the final 33 variables for estimation. By the way, we put the detail code to deal with the original data in a new do file becasue markdown for Stata 14.0 cannot support Chinese and the code is too long to present all. Therefore, we have
+```s
+	use cgss2006_14.dta, clear
+
+	qui do data.do
+```
+	
+Second, we use `-cvlasso-` to program for cross-validation using elastic net estimators. The key point  we choose elastic net estimators is that the dependent variable whether next three years' income is expected to increased is indicators variable:
+```s
+	global x qs3 qa01 qa02 qa04 qa05a qa08a qa10 qa11 qa13 qb01d quc321 ///
+	quc322 quc323 quc324 quc325 quc326 qc34a qc34b qc492 qd06e qd07h1 ///
+	qd08h qd17c qd35a qd36a qd36b qd36c qe02 qe101 qd13i qe03 qe04
+
+	gen y = qe111 //Expectation Income next three years.
+	sum y, de
+```
+If $y = 1$, the individual expected the future's income would increase; if $y = 0$, not. Thus, we should use `-cvlasso-` to find a suitable $\alpha$ and $\lambda$. In order to find the suitable $\alpha$, we use $\alpha = 0, 0.5, 1$ to minimize the $\lambda$. For the rubustness, we use the LSE and LOPT method to estimate\footnote{ We have simulated $\alpha$ in smaller gap, e.g., $\alpha = 0, 0.1, 0.2, \dots, 1$, and the results will not change.}:
+```s	
+	qui cvlasso y $x, alphacount(3) lse
+	dis e(alphamin)
+	dis e(lmin)
+	qui cvlasso y $x, alphacount(3) lopt
+	dis e(alphamin)
+	dis e(lmin)
+```
+Then we should use $\alpha = 1$ and $\lambda = 0.16124761$. It is easy to see from the graph
+```s
+	qui cvlasso y $x, alpha(1) l(`e(lmin)') plotcv
+	graph export CVLOPT.png, replace
+![](CVLOPT.png)
+```
+Third, we use the optimal $\alpha$ and $\lambda$ to program `-lasso2-` to get the result.
+```s
+	lasso2 y $x, alpha(1) l(`e(lmin)')  
+```
+Finally, we obtain the selected variables. It is a intuitively story : A woman (qa01) not young(qa02), belongs to minority(qa04), less educated(qa05a), do not take part in the community(qa08a qa10). She is a soldier (qa11), has a belief(qa13) and works longer every week(qb01d). Her total income is from the army(quc321) which is a stable job(quc322). And the income is mainly sourced by the salary and bonus(quc323), and seldom contains dividends(quc324). If she get dividends by chance, the additional income is mainly from her higher position(quc325) and hardly from her performance(quc326). And her income had a large change from the Reform(qc492). Her husband has less income than her(qd07h1). And she doesn't satisfy the income level(qe02) which has litte change compared to the one before three years(qe101). At this moment, She would be the most impossible to expect the income to be increased.

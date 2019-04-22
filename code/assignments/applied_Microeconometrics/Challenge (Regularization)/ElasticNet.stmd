@@ -1,5 +1,7 @@
-Which factors will affect Chinese Individual's Expected Income? \footnote{Author: Yangyuzhou, ID 15320170155234, mail: yangyuzhou001@foxmail.com}
----------
+---
+title: Which factors will affect Chinese Individual's Expected Income?
+author: Yang Yuzhou
+---
 
 We use CGSS data in 2006 to evaluate the effects that some factors affect Chinese Individual's expected income.
 First, we should deal with the original data from CGSS2006. The data contains basic demographic information and another variables about income directly. The numer of the variables is 71. Therefore, we get the final 33 variables for estimation. By the way, we put the detail code to deal with the original data in a new do file becasue markdown for Stata 14.0 cannot support Chinese and the code is too long to present all. Therefore, we have
